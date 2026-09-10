@@ -39,3 +39,4 @@ update();
 })();
 import('./cloud.js');
 import('./certificates.js');
+import('./my-certificates.js');
