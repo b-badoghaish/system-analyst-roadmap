@@ -1,6 +1,7 @@
 (()=>{
 'use strict';
 const d=document,$=(s,c=d)=>c.querySelector(s),$$=(s,c=d)=>[...c.querySelectorAll(s)],S='sa-roadmap-progress',T='sa-roadmap-theme';
+const favicon=d.createElement('link');favicon.rel='icon';favicon.type='image/svg+xml';favicon.href='favicon.svg';d.head.append(favicon);
 
 // Practical QA specialization: placed after Requirements/Traceability without changing the 10-week core numbering.
 const week5=$('.week[data-week="5"]');
