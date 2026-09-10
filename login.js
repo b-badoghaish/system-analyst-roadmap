@@ -1,0 +1,10 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const SUPABASE_URL='https://ymbktbnswlpfjshayude.supabase.co';
+const SUPABASE_KEY='sb_publishable_YdaalUm7Na2geEyCtIMf0w_3-Y_vWPG';
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+const form=document.getElementById('authForm'),msg=document.getElementById('msg'),nameField=document.getElementById('nameField'),submitBtn=document.getElementById('submitBtn'),displayName=document.getElementById('displayName'),email=document.getElementById('email'),password=document.getElementById('password');
+let mode='login';
+const setMsg=(t,ok=false)=>{msg.textContent=t||'';msg.className='msg'+(ok?' ok':'')};
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{mode=btn.dataset.mode;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));nameField.hidden=mode!=='signup';submitBtn.textContent=mode==='login'?'دخول':'إنشاء الحساب';password.autocomplete=mode==='login'?'current-password':'new-password';setMsg('')}));
+const {data:{session}}=await sb.auth.getSession();if(session)location.replace('./');
+form.addEventListener('submit',async e=>{e.preventDefault();setMsg('');submitBtn.disabled=true;try{if(mode==='login'){const {error}=await sb.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error)throw error;location.replace('./');}else{const {data,error}=await sb.auth.signUp({email:email.value.trim(),password:password.value,options:{data:{display_name:displayName.value.trim()||email.value.split('@')[0]}}});if(error)throw error;if(data.session){location.replace('./');}else{setMsg('تم إنشاء الحساب. افتح بريدك الإلكتروني لتأكيد الحساب ثم ارجع وسجل دخولك.',true);}}}catch(err){setMsg(err?.message==='Invalid login credentials'?'البريد الإلكتروني أو كلمة المرور غير صحيحة.':(err?.message||'حدث خطأ غير متوقع.'))}finally{submitBtn.disabled=false}});
